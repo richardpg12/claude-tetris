@@ -21,8 +21,10 @@ python3 -m http.server 8000   # then open http://localhost:8000
 The whole game is one IIFE-free module-scoped script; `init()` runs on load and on
 the restart button. Key pieces of the design:
 
-- **Board model**: `board` is a `ROWS`×`COLS` array of ints. `0` = empty; `1`–`7`
-  index into `COLORS` and `PIECES`, identifying which tetromino filled the cell.
+- **Board model**: `board` is a `ROWS`×`COLS` array of ints. `0` = empty; `1`–`8`
+  index into `COLORS` and `PIECES`, identifying which piece filled the cell.
+  Type `8` is the "nut" challenge piece (3×3 ring with an empty center), spawned
+  with probability `NUT_CHANCE` (5%) in `randomPiece`.
 - **Pieces**: `PIECES[type]` is a square matrix. Rotation (`rotateCW`) is
   transpose + row-reverse and produces a new matrix each call. `current` holds
   `{ type, shape, x, y }`; `shape` is mutated in place on rotation.
