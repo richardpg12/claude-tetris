@@ -194,6 +194,9 @@ function draw() {
     for (let c = 0; c < COLS; c++)
       drawBlock(ctx, c, r, board[r][c], BLOCK);
 
+  // the spawned piece that triggered game over overlaps the board; skip it
+  if (gameOver) return;
+
   // ghost
   const gy = ghostY();
   for (let r = 0; r < current.shape.length; r++)
@@ -221,6 +224,7 @@ function drawNext() {
 function endGame() {
   gameOver = true;
   cancelAnimationFrame(animId);
+  draw();
   overlayTitle.textContent = 'GAME OVER';
   overlayScore.textContent = `Puntuación: ${score.toLocaleString()}`;
   overlay.classList.remove('hidden');
@@ -252,6 +256,9 @@ function loop(ts) {
       lockPiece();
     }
   }
+  // lockPiece may have ended the game; cancelAnimationFrame in endGame can't
+  // stop this already-running frame, so don't schedule another one.
+  if (gameOver) return;
   draw();
   animId = requestAnimationFrame(loop);
 }
